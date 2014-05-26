@@ -1,0 +1,69 @@
+/**
+ * E-mailer
+ */
+function readRows() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var rows = sheet.getDataRange();
+  var numRows = rows.getNumRows();
+  var values = rows.getValues();
+  
+    for (var i=1; i<numRows; i++) {
+      if (values[i][4]!="a") {
+        //sets value so that it doesn't send to same email again
+        sheet.getRange(i+1,5).setValue("a");
+        //gets code
+        var perk=values[i][1];
+        //sets output
+        var text ="Congradulations! "+values[i][2]+" has recieved the ";
+        //uses code to get perk and concotanate to output
+        if (perk=="1j7k6m5j4n") {
+          text+="Body Armor";
+          text+="\n\nThis page will tell you more about your perk.\nhttp://lasazast.weebly.com/body-armor.html";
+        } else if (perk=="3j6n7b8g9j0k") {
+          text+="Riot Shield";
+          text+="\n\nThis page will tell you more about your perk.\nhttp://lasazast.weebly.com/riot-shield.html";
+        } else if (perk=="4j56b8m9hhc0") {
+          text+="Pistol";
+          text+="\n\nThis page will tell you more about your perk.\nhttp://lasazast.weebly.com/pistol.html";
+        } else if (perk=="4m5j6k7a6s") {
+          text+="Scent Camoflouge";
+          text+="\n\nThis page will tell you more about your perk.\nhttp://lasazast.weebly.com/camouflage.html";
+        } else if (perk=="d13z0m813s") {
+          text+="Lobotomizer";
+          text+="\n\nThis page will tell you more about your perk.\nhttp://lasazast.weebly.com/the-lobotomizer.html";
+        } else {
+          //if bad code, tell them
+          text="I'm sorry "+values[i][2]+", but "+perk+" is not a valid code.";
+        }
+        // Sends email
+        try {
+          MailApp.sendEmail(values[i][3],"PerkFinderPro Notification",text);
+          MailApp.sendEmail("nathan.blackle@gmail.com","Someone entered perk codes",text);
+          MailApp.sendEmail("eyechiauau@gmail.com","Someone entered perk codes",text);
+          sheet.getRange(i+1,6).setValue("GOOD/SENT");
+          Logger.log("Emails remaining for today: "+MailApp.getRemainingDailyQuota());
+        } finally {
+          Logger.log("Oopsie. Email at "+i+" is bad.");
+          sheet.getRange(i+1,6).setValue("BAD");
+        }
+      }
+    }
+};
+
+/**
+ * Adds a custom menu to the active spreadsheet, containing a single menu item
+ * for invoking the readRows() function specified above.
+ * The onOpen() function, when defined, is automatically invoked whenever the
+ * spreadsheet is opened.
+ * For more information on using the Spreadsheet API, see
+ * https://developers.google.com/apps-script/service_spreadsheet
+ */
+function onOpen() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var entries = [{
+    name : "Read Data",
+    functionName : "readRows"
+  }];
+  spreadsheet.addMenu("Script Center Menu", entries);
+};
+

@@ -1,0 +1,1 @@
+This script is designed to be attached to a Google Docs spreadsheet, with the second column being the code, the third column being the name, the fourth column being the e-mail, the fifth column saying whether we already tried to e-mail them, and the sixth column having a status as to whether it sent.
